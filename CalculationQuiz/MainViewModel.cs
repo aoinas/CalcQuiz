@@ -9,10 +9,13 @@ namespace CalculationQuiz
 {
     class MainViewModel : ViewModelBase
     {
-        private static Decimal _factor = 5;
+        private static Decimal FACTOR = 5;
+        private static List<Decimal> NUMBERS = new List<Decimal>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        //private static List<Decimal> NUMBERS = new List<Decimal>() { 0, 1, 2, 3 }; // For debugging
         private List<Calculation> _calculations = new List<Calculation>();
-        private int _currentCalculationIndex = 0;
         private Random _rand = new Random();
+        
+        private int _currentCalculationIndex = 0;
         private int _correctAnswersCount = 0;
         private bool _alreadyAnswered = false;
 
@@ -22,11 +25,19 @@ namespace CalculationQuiz
             NextCmd = new RelayCommand(NextCmdExecute, NextCmdCanExecute);
             AnswerCmd = new RelayCommand<decimal>(AnswerCmdExecute);
 
-            var numbers = new List<Decimal>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            var randos = Randomize(numbers);
+            Restart();
+        }
+
+        private void Restart()
+        {
+            var randos = Randomize(NUMBERS);
 
             foreach (var no in randos)
-                _calculations.Add(new MultiplicationCalculation(_factor, no));
+                _calculations.Add(new MultiplicationCalculation(FACTOR, no));
+
+            _correctAnswersCount = 0;
+            _alreadyAnswered = false;
+            _currentCalculationIndex = 0;
 
             NextCmdExecute();
         }
@@ -58,7 +69,7 @@ namespace CalculationQuiz
             else
             {
                 MessageBox.Show(String.Format("Sait {0} vastausta oikein!", _correctAnswersCount), "Testi päättyi", MessageBoxButton.OK);
-                // TODO: Restart
+                Restart();
             }
         }
 
@@ -86,7 +97,7 @@ namespace CalculationQuiz
 
         private decimal GetRandomAnswer()
         {
-            return _rand.Next((int)Math.Round(_factor * 10, 0));
+            return _rand.Next((int)Math.Round(FACTOR * 10, 0));
         }
 
         private Calculation _currentCalculation;

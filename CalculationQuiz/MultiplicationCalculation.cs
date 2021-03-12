@@ -10,7 +10,7 @@ namespace CalculationQuiz
         {
         }
 
-        protected override string Separator { get { return "*"; } }
+        protected override string Separator { get { return "·"; } }
 
         public override Decimal CalculatedResult()
         {
